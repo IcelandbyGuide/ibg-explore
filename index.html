@@ -18,7 +18,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .brand{font-weight:800;letter-spacing:-.02em;font-size:15px;white-space:nowrap}
 .brand span{color:var(--accent)}
 .tabs{display:flex;gap:4px;padding:3px;border-radius:999px;background:#f2f1ee}
-.tabs a{padding:7px 14px;border-radius:999px;font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;white-space:nowrap}
+.tabs a{padding:7px 12px;border-radius:999px;font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;white-space:nowrap}
 .tabs a[aria-current="page"]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .view{padding-block:36px 64px}
 .note{max-width:1240px;margin:40px auto 0;padding:18px 20px;border:1px dashed rgba(40,40,40,.22);border-radius:14px;color:var(--muted);font-size:14px}
@@ -32,12 +32,20 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   <nav class="tabs" aria-label="Preview">
     <a href="#shop" id="tab-shop">Shop hero</a>
     <a href="#explore" id="tab-explore">Explore page</a>
+    <a href="#days" id="tab-days">Day tours</a>
+    <a href="#multi" id="tab-multi">Multi-day</a>
   </nav>
 </div></div>
 <main class="frame">
   <section class="view" id="view-shop" hidden>
     <div class="ibg-explore" data-mode="hero" data-explore-url="#explore" data-src="places.json" data-assets=""></div>
     <p class="note"><b>Your existing guide shop continues here.</b> On icelandbyguide.com/itineraries this map sits above the product grid you already have. Each place links straight to the guides that include it.</p>
+  </section>
+  <section class="view" id="view-days" hidden>
+    <div class="ibg-explore-d" data-mode="hero" data-offer="day-tours" data-explore-url="#explore" data-src="places.json" data-assets=""></div>
+  </section>
+  <section class="view" id="view-multi" hidden>
+    <div class="ibg-explore-m" data-mode="hero" data-offer="multi-day" data-explore-url="#explore" data-src="places.json" data-assets=""></div>
   </section>
   <section class="view" id="view-explore" hidden>
     <div class="ibg-explore-x" data-mode="explore" data-src="places.json" data-assets=""></div>
@@ -46,14 +54,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 <script src="ibg-explore.js"></script>
 <script>
 (function(){
+  var V={shop:'.ibg-explore',explore:'.ibg-explore-x',days:'.ibg-explore-d',multi:'.ibg-explore-m'};
   function show(){
-    var v=(location.hash||'#shop').slice(1); if(v!=='explore') v='shop';
-    document.getElementById('view-shop').hidden=v!=='shop';
-    document.getElementById('view-explore').hidden=v!=='explore';
-    document.getElementById('tab-shop').setAttribute('aria-current',v==='shop'?'page':'false');
-    document.getElementById('tab-explore').setAttribute('aria-current',v==='explore'?'page':'false');
-    var el=document.querySelector(v==='shop'?'.ibg-explore':'.ibg-explore-x');
-    if(!el.__ibgx) window.IBGExplore.mount(el); else if(el.__ibgx.map) el.__ibgx.map.resize();
+    var v=(location.hash||'#shop').slice(1).split('&')[0]; if(!V[v]) v='shop';
+    Object.keys(V).forEach(function(k){document.getElementById('view-'+k).hidden=k!==v;document.getElementById('tab-'+k).setAttribute('aria-current',k===v?'page':'false');});
+    var el=document.querySelector(V[v]);
+    if(!el.__ibgx) window.IBGExplore.mount(el);
     window.scrollTo(0,0);
   }
   window.addEventListener('hashchange',show); show();
