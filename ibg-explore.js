@@ -283,7 +283,7 @@
   }
 
   function packageFor(ctx, n) {
-    var P = ctx.data.packages; if (!P) return null;
+    var P = ctx.data.packages; if (!P || !P.live) return null;
     for (var i = 0; i < P.items.length; i++) if (P.items[i].guides.indexOf(n) > -1) return P.items[i];
     return null;
   }
@@ -292,7 +292,7 @@
   /* =========================== PACKAGES =========================== */
   function buildPackages(ctx) {
     var t = ctx.t, P = ctx.data.packages, root = ctx.root, site = ctx.data.site || '';
-    if (!P) { root.innerHTML = ''; return; }
+    if (!P || (!P.live && !/[?&]preview-packages/.test(location.search) && !window.IBG_EXPLORE_DATA)) { root.innerHTML = ''; return; }
     var G = ctx.data.guides;
     function titles(nums) { return nums.map(function (n) { var g = G[n]; return g ? g.title + (g.days && g.days !== '1 day' ? ' (' + g.days + ')' : '') : ''; }).filter(Boolean).join(' \u00b7 '); }
     function cta(pk, cls) { return h('a', { class: 'ibgx-pkg-cta' + (cls || ''), href: site + pk.path }, [fmt(t.pkgGet, { n: pk.n }), icon('arrow')]); }
