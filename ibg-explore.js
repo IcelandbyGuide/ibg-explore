@@ -283,7 +283,7 @@
   }
 
   function packageFor(ctx, n) {
-    var P = ctx.data.packages; if (!P || !P.live) return null;
+    var P = ctx.data.packages; if (!P || (!P.live && !window.IBG_EXPLORE_DATA)) return null;
     for (var i = 0; i < P.items.length; i++) if (P.items[i].guides.indexOf(n) > -1) return P.items[i];
     return null;
   }
