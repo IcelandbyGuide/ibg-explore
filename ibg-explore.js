@@ -318,8 +318,11 @@
       table.appendChild(r);
     }
     row(t.pkgMap, '', P.items.map(function (pk) { return h('span', { class: 'ibgx-pkg-map', text: pk.map }); }));
+    function has(rw, pk) { return rw.only ? rw.only.indexOf(pk.id) > -1 : rw.guides.every(function (n) { return pk.guides.indexOf(n) > -1; }); }
+    function rlabel(rw) { return rw.only ? rw.label : rw.label + ' (' + rw.guides.length + ')'; }
+    function rsub(rw) { return rw.only ? (rw.sub || '') : titles(rw.guides); }
     P.rows.forEach(function (rw) {
-      row(rw.label + ' (' + rw.guides.length + ')', titles(rw.guides), P.items.map(function (pk) { return check(rw.guides.every(function (n) { return pk.guides.indexOf(n) > -1; })); }));
+      row(rlabel(rw), rsub(rw), P.items.map(function (pk) { return check(has(rw, pk)); }));
     });
     row(t.pkgTotal, '', P.items.map(function (pk) { return h('strong', { class: 'ibgx-pkg-total', text: String(pk.guides.length) }); }));
     var fr = h('div', { class: 'ibgx-pkg-row ibgx-pkg-row--foot', role: 'row' }, [h('div', { class: 'ibgx-pkg-cell ibgx-pkg-label' })]);
@@ -332,9 +335,8 @@
       ul.appendChild(h('li', {}, [h('strong', { text: pk.map })]));
       if (i > 0) ul.appendChild(h('li', { text: 'Everything in Package ' + P.items[i - 1].n }));
       P.rows.forEach(function (rw) {
-        var inThis = rw.guides.every(function (n) { return pk.guides.indexOf(n) > -1; });
-        var inPrev = i > 0 && rw.guides.every(function (n) { return P.items[i - 1].guides.indexOf(n) > -1; });
-        if (inThis && !inPrev) ul.appendChild(h('li', {}, [h('strong', { text: rw.label }), h('small', { text: titles(rw.guides) })]));
+        var inThis = has(rw, pk), inPrev = i > 0 && has(rw, P.items[i - 1]);
+        if (inThis && !inPrev) ul.appendChild(h('li', {}, [h('strong', { text: rlabel(rw) }), h('small', { text: rsub(rw) })]));
       });
       ul.appendChild(h('li', { class: 'ibgx-pkg-sum', text: fmt(t.pkgGuides, { n: pk.guides.length }) }));
       cards.appendChild(h('div', { class: 'ibgx-pkg-card' + (pk.pick ? ' is-pick' : '') }, [head(pk), ul]));
