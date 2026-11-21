@@ -300,7 +300,7 @@
       return h('div', { class: 'ibgx-pkg-head' + (pk.pick ? ' is-pick' : '') }, [
         pk.pick ? h('span', { class: 'ibgx-pkg-badge', text: t.pkgPick }) : null,
         h('p', { class: 'ibgx-pkg-n', text: fmt(t.pkgName, { n: pk.n }) }),
-        h('h3', { class: 'ibgx-pkg-name', text: pk.name }),
+        h('h3', { class: 'ibgx-pkg-name', text: pk.display || pk.name }),
         h('p', { class: 'ibgx-pkg-price' }, [h('strong', { text: '$' + pk.usd }), h('span', { text: isk0(ctx, pk.usd) })]),
         h('p', { class: 'ibgx-pkg-for', text: pk['for'] }),
         cta(pk)
